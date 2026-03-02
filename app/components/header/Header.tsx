@@ -11,7 +11,6 @@ export default function Header() {
         <Container>
             <Navbar.Brand href="/">Intermezzo staff</Navbar.Brand>
             <Nav className="me-auto">
-                <Nav.Link as={Link} href="/myhours">Moje hodiny</Nav.Link>
                 <Nav.Link as={Link} href="/myinputs">Moje vklady</Nav.Link>
             </Nav>
         </Container>
