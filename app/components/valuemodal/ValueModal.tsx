@@ -4,7 +4,7 @@ import { addInputForUser } from "../../actions/myinputs"
 
 const LABEL_WIDTH = 140
 
-export default function ValueModal({ shouldShow, setShouldShow, isNew }: { shouldShow: boolean, setShouldShow: Dispatch<SetStateAction<boolean>>, isNew: boolean }) {
+export default function ValueModal({ shouldShow, setShouldShow, isNew, onSuccess }: { shouldShow: boolean, setShouldShow: Dispatch<SetStateAction<boolean>>, isNew: boolean, onSuccess: () => void }) {
     const [day, setDay] = useState("")
     const [hours, setHours] = useState("")
     const [startMoneyCents, setStartMoneyCents] = useState("")
@@ -28,6 +28,7 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew }: { shoul
             endMoneyCents: Math.round(parseFloat(endMoneyCents) * 100),
         })
         setShouldShow(false)
+        onSuccess()
     }
 
     return (
