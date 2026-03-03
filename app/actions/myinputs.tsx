@@ -1,0 +1,44 @@
+"use server";
+
+import { getDb } from "../lib/mongo";
+import { Input, InputDbDto } from "../interfaces/Input"
+
+
+export async function getUserInputs(documentName: string): Promise<Input[]> {
+    const db = await getDb();
+
+    const day = await db
+        .collection<InputDbDto>("inputs")
+        .findOne({ _id: documentName });
+
+    return day?.inputs ?? [];
+}
+
+export async function createDefaultInputsForUser(documentName: string): Promise<void> {
+
+    const db = await getDb();
+    if ((await getUserInputs(documentName)).length > 0) return;
+
+    if (await db
+        .collection<InputDbDto>("inputs")
+        .findOne({ _id: documentName })) {
+        return;
+    }
+
+    await db
+        .collection<InputDbDto>("tasks")
+        .insertOne({ _id: documentName, inputs: [] });
+}
+
+export async function addInputForUser(documentName: string, input: Input): Promise<void> {
+    const db = await getDb();
+
+    await createDefaultInputsForUser(documentName);
+
+    await db
+        .collection<InputDbDto>("tasks")
+        .updateOne(
+            { _id: documentName },
+            { $push: { inputs: input } }
+        );
+}

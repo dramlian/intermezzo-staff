@@ -1,4 +1,4 @@
-export default interface Input {
+export interface Input {
     day: string;
     hours: number;
     startMoneyCents: number;
@@ -8,4 +8,10 @@ export default interface Input {
     turnoverCents: number;
     turnoverTerminalCents: number;
     dayExpensesCents: number;
+}
+
+
+export interface InputDbDto {
+    _id: string;
+    inputs: Input[];
 }
