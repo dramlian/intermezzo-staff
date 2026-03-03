@@ -9,7 +9,7 @@ export async function getDb(): Promise<Db> {
     if (!client) {
         client = new MongoClient(uri);
         await client.connect();
-        db = client.db("life_organizer");
+        db = client.db("inputs_prod");
     }
     return db;
 }

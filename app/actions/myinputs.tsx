@@ -26,7 +26,7 @@ export async function createDefaultInputsForUser(documentName: string): Promise<
     }
 
     await db
-        .collection<InputDbDto>("tasks")
+        .collection<InputDbDto>("inputs")
         .insertOne({ _id: documentName, inputs: [] });
 }
 
@@ -36,7 +36,7 @@ export async function addInputForUser(documentName: string, input: Input): Promi
     await createDefaultInputsForUser(documentName);
 
     await db
-        .collection<InputDbDto>("tasks")
+        .collection<InputDbDto>("inputs")
         .updateOne(
             { _id: documentName },
             { $push: { inputs: input } }
