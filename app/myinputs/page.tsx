@@ -14,6 +14,7 @@ export default function MyInputs() {
 
     const [shouldShow, setShouldShow] = useState(false);
     const [modalInEdit, setModalInEdit] = useState(false);
+    const [selectedInput, setSelectedInput] = useState<Input | undefined>(undefined);
     const [hoursView, setHoursView] = useState(false);
     const [inputs, setInputs] = useState<Input[]>([]);
     const [refreshTable, setRefreshTable] = useState(0);
@@ -58,7 +59,7 @@ export default function MyInputs() {
                     const isEditable = i >= inputs.length - 2
                     const money = (cents: number) => isEditable ? eur(cents) : "****"
                     return (
-                        <tr key={i} onClick={isEditable ? () => { setShouldShow(true); setModalInEdit(true); } : undefined} className={isEditable ? "table-light" : "table-secondary"} style={isEditable ? { cursor: "pointer" } : { opacity: 0.5, pointerEvents: "none" }}>
+                        <tr key={i} onClick={isEditable ? () => { setShouldShow(true); setModalInEdit(true); setSelectedInput(input); } : undefined} className={isEditable ? "table-light" : "table-secondary"} style={isEditable ? { cursor: "pointer" } : { opacity: 0.5, pointerEvents: "none" }}>
                             <td>{input.day}</td>
                             <td>{input.hours}</td>
                             {!hoursView && <>
@@ -75,6 +76,6 @@ export default function MyInputs() {
                 })}
             </tbody>
         </Table>
-        <ValueModal shouldShow={shouldShow} setShouldShow={setShouldShow} isNew={!modalInEdit} onSuccess={() => setRefreshTable(n => n + 1)} />
+        <ValueModal shouldShow={shouldShow} setShouldShow={setShouldShow} isNew={!modalInEdit} input={selectedInput} onSuccess={() => setRefreshTable(n => n + 1)} />
     </Container>
 }

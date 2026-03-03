@@ -1,10 +1,13 @@
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Button, Modal, InputGroup, Form } from "react-bootstrap"
-import { addInputForUser } from "../../actions/myinputs"
+import { addInputForUser, deleteInputForUser, updateInputForUser } from "../../actions/myinputs"
+import { Input } from "../../interfaces/Input"
 
 const LABEL_WIDTH = 140
 
-export default function ValueModal({ shouldShow, setShouldShow, isNew, onSuccess }: { shouldShow: boolean, setShouldShow: Dispatch<SetStateAction<boolean>>, isNew: boolean, onSuccess: () => void }) {
+const centsToStr = (cents: number) => (cents / 100).toFixed(2)
+
+export default function ValueModal({ shouldShow, setShouldShow, isNew, input, onSuccess }: { shouldShow: boolean, setShouldShow: Dispatch<SetStateAction<boolean>>, isNew: boolean, input?: Input, onSuccess: () => void }) {
     const [day, setDay] = useState("")
     const [hours, setHours] = useState("")
     const [startMoneyCents, setStartMoneyCents] = useState("")
@@ -15,8 +18,32 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, onSuccess
     const [dayExpensesCents, setDayExpensesCents] = useState("")
     const [endMoneyCents, setEndMoneyCents] = useState("")
 
-    async function handleInsert() {
-        await addInputForUser("test_user", {
+    useEffect(() => {
+        if (!isNew && input) {
+            setDay(input.day)
+            setHours(String(input.hours))
+            setStartMoneyCents(centsToStr(input.startMoneyCents))
+            setStartWorkTime(input.startWorkTime)
+            setEndWorkTime(input.endWorkTime)
+            setTurnoverCents(centsToStr(input.turnoverCents))
+            setTurnoverTerminalCents(centsToStr(input.turnoverTerminalCents))
+            setDayExpensesCents(centsToStr(input.dayExpensesCents))
+            setEndMoneyCents(centsToStr(input.endMoneyCents))
+        } else if (isNew) {
+            setDay("")
+            setHours("")
+            setStartMoneyCents("")
+            setStartWorkTime("")
+            setEndWorkTime("")
+            setTurnoverCents("")
+            setTurnoverTerminalCents("")
+            setDayExpensesCents("")
+            setEndMoneyCents("")
+        }
+    }, [input, isNew])
+
+    function buildInput(): Input {
+        return {
             day,
             hours: parseFloat(hours),
             startMoneyCents: Math.round(parseFloat(startMoneyCents) * 100),
@@ -26,7 +53,25 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, onSuccess
             turnoverTerminalCents: Math.round(parseFloat(turnoverTerminalCents) * 100),
             dayExpensesCents: Math.round(parseFloat(dayExpensesCents) * 100),
             endMoneyCents: Math.round(parseFloat(endMoneyCents) * 100),
-        })
+        }
+    }
+
+    async function handleInsert() {
+        await addInputForUser("test_user", buildInput())
+        setShouldShow(false)
+        onSuccess()
+    }
+
+    async function handleUpdate() {
+        if (!input) return
+        await updateInputForUser("test_user", input.day, buildInput())
+        setShouldShow(false)
+        onSuccess()
+    }
+
+    async function handleDelete() {
+        if (!input) return
+        await deleteInputForUser("test_user", input.day)
         setShouldShow(false)
         onSuccess()
     }
@@ -81,8 +126,8 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, onSuccess
                     </div>
                 ) : (
                     <div className="d-flex gap-2 w-100">
-                        <Button variant="outline-secondary" className="w-100">Upraviť</Button>
-                        <Button variant="outline-danger" className="w-100">Vymazať</Button>
+                        <Button variant="outline-secondary" className="w-100" onClick={handleUpdate}>Upraviť</Button>
+                        <Button variant="outline-danger" className="w-100" onClick={handleDelete}>Vymazať</Button>
                     </div>
                 )}
             </Modal.Footer>

@@ -30,6 +30,28 @@ export async function createDefaultInputsForUser(documentName: string): Promise<
         .insertOne({ _id: documentName, inputs: [] });
 }
 
+export async function deleteInputForUser(documentName: string, day: string): Promise<void> {
+    const db = await getDb();
+
+    await db
+        .collection<InputDbDto>("inputs")
+        .updateOne(
+            { _id: documentName },
+            { $pull: { inputs: { day: day } } }
+        );
+}
+
+export async function updateInputForUser(documentName: string, originalDay: string, input: Input): Promise<void> {
+    const db = await getDb();
+
+    await db
+        .collection<InputDbDto>("inputs")
+        .updateOne(
+            { _id: documentName, "inputs.day": originalDay },
+            { $set: { "inputs.$": input } }
+        );
+}
+
 export async function addInputForUser(documentName: string, input: Input): Promise<void> {
     const db = await getDb();
 
