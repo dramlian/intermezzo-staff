@@ -22,6 +22,15 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
     const [toast, setToast] = useState<{ show: boolean, message: string, variant: "success" | "warning" }>({ show: false, message: "", variant: "success" })
 
     useEffect(() => {
+        if (!startWorkTime || !endWorkTime) { setHours(""); return }
+        const [sh, sm] = startWorkTime.split(":").map(Number)
+        const [eh, em] = endWorkTime.split(":").map(Number)
+        const diff = (eh * 60 + em) - (sh * 60 + sm)
+        if (diff <= 0) { setHours(""); showToast("Odchod musí byť po príchode.", "warning"); return }
+        setHours((diff / 60).toFixed(2))
+    }, [startWorkTime, endWorkTime])
+
+    useEffect(() => {
         if (!isNew && input) {
             setDay(input.day)
             setHours(String(input.hours))
@@ -131,10 +140,6 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
                     <InputGroup className="mb-2">
                         <InputGroup.Text style={{ width: LABEL_WIDTH }}>Odchod</InputGroup.Text>
                         <Form.Control type="time" value={endWorkTime} onChange={e => setEndWorkTime(e.target.value)} />
-                    </InputGroup>
-                    <InputGroup className="mb-2">
-                        <InputGroup.Text style={{ width: LABEL_WIDTH }}>Hodiny</InputGroup.Text>
-                        <Form.Control type="number" step="0.5" min="0" value={hours} onChange={e => setHours(e.target.value)} />
                     </InputGroup>
                     <InputGroup className="mb-2">
                         <InputGroup.Text style={{ width: LABEL_WIDTH }}>Tržba</InputGroup.Text>
