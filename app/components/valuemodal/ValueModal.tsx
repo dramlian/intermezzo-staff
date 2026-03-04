@@ -132,6 +132,7 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
                     <InputGroup className="mb-2">
                         <InputGroup.Text style={{ width: LABEL_WIDTH }}>Štart suma</InputGroup.Text>
                         <Form.Control type="number" step="0.01" min="0" value={startMoneyCents} onChange={e => setStartMoneyCents(e.target.value)} />
+                        <InputGroup.Text>€</InputGroup.Text>
                     </InputGroup>
                     <InputGroup className="mb-2">
                         <InputGroup.Text style={{ width: LABEL_WIDTH }}>Príchod</InputGroup.Text>
@@ -144,18 +145,22 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
                     <InputGroup className="mb-2">
                         <InputGroup.Text style={{ width: LABEL_WIDTH }}>Tržba</InputGroup.Text>
                         <Form.Control type="number" step="0.01" min="0" value={turnoverCents} onChange={e => setTurnoverCents(e.target.value)} />
+                        <InputGroup.Text>€</InputGroup.Text>
                     </InputGroup>
                     <InputGroup className="mb-2">
                         <InputGroup.Text style={{ width: LABEL_WIDTH }}>Terminal</InputGroup.Text>
                         <Form.Control type="number" step="0.01" min="0" value={turnoverTerminalCents} onChange={e => setTurnoverTerminalCents(e.target.value)} />
+                        <InputGroup.Text>€</InputGroup.Text>
                     </InputGroup>
                     <InputGroup className="mb-2">
                         <InputGroup.Text style={{ width: LABEL_WIDTH }}>Výdaj faktúry</InputGroup.Text>
                         <Form.Control type="number" step="0.01" min="0" value={dayExpensesCents} onChange={e => setDayExpensesCents(e.target.value)} />
+                        <InputGroup.Text>€</InputGroup.Text>
                     </InputGroup>
                     <InputGroup className="mb-2">
                         <InputGroup.Text style={{ width: LABEL_WIDTH }}>Konečná suma</InputGroup.Text>
                         <Form.Control type="number" step="0.01" min="0" value={endMoneyCents} onChange={e => setEndMoneyCents(e.target.value)} />
+                        <InputGroup.Text>€</InputGroup.Text>
                     </InputGroup>
                 </Modal.Body>
                 <Modal.Footer>
