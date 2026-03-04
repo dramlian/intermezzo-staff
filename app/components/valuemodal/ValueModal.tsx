@@ -6,6 +6,7 @@ import { Input } from "../../interfaces/Input"
 const LABEL_WIDTH = 140
 
 const centsToStr = (cents: number) => (cents / 100).toFixed(2)
+const today = () => new Date().toISOString().split("T")[0]
 
 export default function ValueModal({ shouldShow, setShouldShow, isNew, input, onSuccess }: { shouldShow: boolean, setShouldShow: Dispatch<SetStateAction<boolean>>, isNew: boolean, input?: Input, onSuccess: () => void }) {
     const [day, setDay] = useState("")
@@ -32,7 +33,7 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
             setDayExpensesCents(centsToStr(input.dayExpensesCents))
             setEndMoneyCents(centsToStr(input.endMoneyCents))
         } else if (isNew) {
-            setDay("")
+            setDay(today())
             setHours("")
             setStartMoneyCents("")
             setStartWorkTime("")
@@ -117,7 +118,7 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
                 <Modal.Body>
                     <InputGroup className="mb-2">
                         <InputGroup.Text style={{ width: LABEL_WIDTH }}>Dátum</InputGroup.Text>
-                        <Form.Control type="date" value={day} onChange={e => setDay(e.target.value)} />
+                        <Form.Control type="date" value={day} onChange={e => setDay(e.target.value)} min={isNew ? today() : undefined} max={isNew ? today() : undefined} readOnly={!isNew} />
                     </InputGroup>
                     <InputGroup className="mb-2">
                         <InputGroup.Text style={{ width: LABEL_WIDTH }}>Štart suma</InputGroup.Text>
