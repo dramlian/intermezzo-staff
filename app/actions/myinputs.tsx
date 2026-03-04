@@ -52,10 +52,16 @@ export async function updateInputForUser(documentName: string, originalDay: stri
         );
 }
 
-export async function addInputForUser(documentName: string, input: Input): Promise<void> {
+export async function addInputForUser(documentName: string, input: Input): Promise<{ duplicate: boolean }> {
     const db = await getDb();
 
     await createDefaultInputsForUser(documentName);
+
+    const existing = await db
+        .collection<InputDbDto>("inputs")
+        .findOne({ _id: documentName, "inputs.day": input.day });
+
+    if (existing) return { duplicate: true };
 
     await db
         .collection<InputDbDto>("inputs")
@@ -63,4 +69,6 @@ export async function addInputForUser(documentName: string, input: Input): Promi
             { _id: documentName },
             { $push: { inputs: input } }
         );
+
+    return { duplicate: false };
 }

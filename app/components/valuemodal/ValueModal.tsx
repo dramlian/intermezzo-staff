@@ -56,10 +56,10 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
 
     function validate(): string | null {
         if (!day) return "Dátum je povinný."
-        if (!hours || isNaN(parseFloat(hours))) return "Hodiny sú povinné."
-        if (!startMoneyCents || isNaN(parseFloat(startMoneyCents))) return "Štart suma je povinná."
         if (!startWorkTime) return "Príchod je povinný."
         if (!endWorkTime) return "Odchod je povinný."
+        if (!hours) return "Odchod musí byť po príchode."
+        if (!startMoneyCents || isNaN(parseFloat(startMoneyCents))) return "Štart suma je povinná."
         if (!turnoverCents || isNaN(parseFloat(turnoverCents))) return "Tržba je povinná."
         if (!turnoverTerminalCents || isNaN(parseFloat(turnoverTerminalCents))) return "Terminal je povinný."
         if (!dayExpensesCents || isNaN(parseFloat(dayExpensesCents))) return "Výdaj faktúry je povinný."
@@ -88,7 +88,8 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
     async function handleInsert() {
         const error = validate()
         if (error) { showToast(error, "warning"); return }
-        await addInputForUser("test_user", buildInput())
+        const { duplicate } = await addInputForUser("test_user", buildInput())
+        if (duplicate) { showToast("Záznam pre tento dátum už existuje.", "warning"); return }
         setShouldShow(false)
         onSuccess()
         showToast("Hodnota bola úspešne vložená.", "success")
