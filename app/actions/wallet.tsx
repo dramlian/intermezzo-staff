@@ -14,6 +14,13 @@ export async function getWallet(): Promise<Wallet | null> {
     return doc.history[doc.history.length - 1];
 }
 
+export async function getWalletHistory(): Promise<Wallet[]> {
+    const db = await getDb();
+    const doc = await db.collection<WalletDbDto>(COLLECTION).findOne({ _id: DOCUMENT_ID });
+    if (!doc || !doc.history?.length) return [];
+    return [...doc.history].reverse();
+}
+
 export async function setWallet(moneyCents: number): Promise<void> {
     const db = await getDb();
     const entry: Wallet = {
