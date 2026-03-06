@@ -1,0 +1,36 @@
+[data-bs-theme="dark"] {
+    --bs-body-bg: #0d0d0d;
+    --bs-body-bg-rgb: 13, 13, 13;
+    --bs-secondary-bg: #1a1a1a;
+    --bs-secondary-bg-rgb: 26, 26, 26;
+    --bs-tertiary-bg: #222222;
+    --bs-tertiary-bg-rgb: 34, 34, 34;
+    --bs-dark: #111111;
+    --bs-dark-rgb: 17, 17, 17;
+    --bs-dark-bg-subtle: #0d0d0d;
+    --bs-border-color: #2e2e2e;
+    --bs-border-color-translucent: rgba(255, 255, 255, 0.1);
+
+    /* modal/card/accordion */
+    --bs-modal-bg: #111111;
+    --bs-card-bg: #111111;
+    --bs-accordion-bg: #111111;
+    --bs-accordion-btn-bg: #111111;
+    --bs-accordion-active-bg: #1a1a1a;
+
+    /* form controls */
+    --bs-input-bg: #1a1a1a;
+    --bs-form-control-bg: #1a1a1a;
+}
+
+.table-dark {
+    --bs-table-bg: #0d0d0d;
+    --bs-table-border-color: #2e2e2e;
+    --bs-table-striped-bg: #151515;
+    --bs-table-hover-bg: #1c1c1c;
+    --bs-table-color: #dee2e6;
+}
+
+.navbar.bg-dark, .navbar[data-bs-theme="dark"] {
+    background-color: #0d0d0d !important;
+}

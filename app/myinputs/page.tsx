@@ -38,9 +38,9 @@ export default function MyInputs() {
                 <Button variant={hoursView ? "outline-primary" : "outline-success"} className="w-50 ms-1" onClick={() => { setHoursView(!hoursView) }}>{hoursView ? "Zobraziť všetky dáta" : "Zobraziť len hodiny"}</Button>
             </Col>
         </Row>
-        <Table bordered hover>
+        <Table bordered hover variant="dark">
             <thead>
-                <tr className="table-light">
+                <tr>
                     <th>Dátum/Deň</th>
                     <th>Hodiny</th>
                     {!hoursView && <>
@@ -59,7 +59,7 @@ export default function MyInputs() {
                     const isEditable = i >= inputs.length - 2
                     const money = (cents: number) => isEditable ? eur(cents) : "****"
                     return (
-                        <tr key={i} onClick={isEditable ? () => { setShouldShow(true); setModalInEdit(true); setSelectedInput(input); } : undefined} className={isEditable ? "table-light" : "table-secondary"} style={isEditable ? { cursor: "pointer" } : { opacity: 0.5, pointerEvents: "none" }}>
+                        <tr key={i} onClick={isEditable ? () => { setShouldShow(true); setModalInEdit(true); setSelectedInput(input); } : undefined} style={isEditable ? { cursor: "pointer" } : { opacity: 0.35, pointerEvents: "none" }}>
                             <td>{input.day}</td>
                             <td>{input.hours}</td>
                             {!hoursView && <>
