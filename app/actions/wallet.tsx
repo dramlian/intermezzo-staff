@@ -7,11 +7,11 @@ import { Wallet, WalletDbDto } from "../interfaces/Wallet";
 async function requireAuth() {
     const session = await auth();
     if (!session) throw new Error("Unauthorized");
+    return session;
 }
 
 const DOCUMENT_ID = "wallet";
 const COLLECTION = "wallet_final";
-const HARDCODED_NAME = "Joe Doe";
 
 export async function getWallet(): Promise<Wallet | null> {
     await requireAuth();
@@ -30,10 +30,11 @@ export async function getWalletHistory(): Promise<Wallet[]> {
 }
 
 export async function setWallet(moneyCents: number): Promise<void> {
-    await requireAuth();
+    const session = await requireAuth();
+    const name = session.user?.name ?? session.user?.email ?? "";
     const db = await getDb();
     const entry: Wallet = {
-        name: HARDCODED_NAME,
+        name,
         money: moneyCents,
         date: new Date().toISOString(),
     };

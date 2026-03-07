@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { useCurrentUser } from "../../lib/useCurrentUser"
 import { Button, Modal, InputGroup, Form, Toast, ToastContainer } from "react-bootstrap"
 import { addInputForUser, deleteInputForUser, updateInputForUser } from "../../actions/myinputs"
 import { Input } from "../../interfaces/Input"
@@ -9,6 +10,7 @@ const centsToStr = (cents: number) => (cents / 100).toFixed(2)
 const today = () => new Date().toISOString().split("T")[0]
 
 export default function ValueModal({ shouldShow, setShouldShow, isNew, input, onSuccess }: { shouldShow: boolean, setShouldShow: Dispatch<SetStateAction<boolean>>, isNew: boolean, input?: Input, onSuccess: () => void }) {
+    const { email } = useCurrentUser();
     const [day, setDay] = useState("")
     const [hours, setHours] = useState("")
     const [startMoneyCents, setStartMoneyCents] = useState("")
@@ -88,7 +90,7 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
     async function handleInsert() {
         const error = validate()
         if (error) { showToast(error, "warning"); return }
-        const { duplicate } = await addInputForUser("test_user", buildInput())
+        const { duplicate } = await addInputForUser(email, buildInput())
         if (duplicate) { showToast("Záznam pre tento dátum už existuje.", "warning"); return }
         setShouldShow(false)
         onSuccess()
@@ -99,7 +101,7 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
         if (!input) return
         const error = validate()
         if (error) { showToast(error, "warning"); return }
-        await updateInputForUser("test_user", input.day, buildInput())
+        await updateInputForUser(email, input.day, buildInput())
         setShouldShow(false)
         onSuccess()
         showToast("Hodnota bola úspešne upravená.", "success")
@@ -107,7 +109,7 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
 
     async function handleDelete() {
         if (!input) return
-        await deleteInputForUser("test_user", input.day)
+        await deleteInputForUser(email, input.day)
         setShouldShow(false)
         onSuccess()
         showToast("Hodnota bola vymazaná.", "success")

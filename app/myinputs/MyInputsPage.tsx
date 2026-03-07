@@ -3,12 +3,14 @@ import { Container, Table, Button, Row, Col } from "react-bootstrap"
 import MonthSelector from "../components/monthselector/MonthSelector"
 import ValueModal from "../components/valuemodal/ValueModal"
 import { useEffect, useState } from "react"
+import { useCurrentUser } from "../lib/useCurrentUser"
 import { Input } from "../interfaces/Input"
 import { getUserInputs } from "../actions/myinputs"
 
 const eur = (cents: number) => `${(cents / 100).toFixed(2)} €`
 
 export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
+    const { email } = useCurrentUser();
 
     const [shouldShow, setShouldShow] = useState(false);
     const [modalInEdit, setModalInEdit] = useState(false);
@@ -18,13 +20,14 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
     const [refreshTable, setRefreshTable] = useState(0);
 
     useEffect(() => {
+        if (!email) return;
         const loadInputs = async () => {
-            const data = await getUserInputs("test_user");
+            const data = await getUserInputs(email);
             setInputs(data);
         };
 
         loadInputs();
-    }, [refreshTable]);
+    }, [refreshTable, email]);
 
     return <Container className='mt-3'>
         <Row className="mb-3">

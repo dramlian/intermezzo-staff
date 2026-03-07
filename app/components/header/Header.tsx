@@ -6,11 +6,12 @@ import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import Link from "next/link";
 import styles from "./Header.module.css";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { useCurrentUser } from "../../lib/useCurrentUser";
 
 
 export default function Header({ isAdmin }: { isAdmin: boolean }) {
-    const { data: session } = useSession();
+    const { name, email } = useCurrentUser();
 
     return <Navbar data-bs-theme="dark" className={styles.navbarGradient}>
         <Container>
@@ -19,11 +20,9 @@ export default function Header({ isAdmin }: { isAdmin: boolean }) {
                 <Nav.Link as={Link} href="/wallet">Peňaženka</Nav.Link>
                 <Nav.Link as={Link} href="/myinputs">Moje vklady</Nav.Link>
             </Nav>
-            {session?.user && (
+            {email && (
                 <div className="d-flex align-items-center gap-2">
-                    <span className="text-light" style={{ fontSize: "0.9rem" }}>
-                        {session.user.name ?? session.user.email}
-                    </span>
+                    <span className="text-light" style={{ fontSize: "0.9rem" }}>{name}</span>
                     {isAdmin && (
                         <span className="badge bg-primary text-dark" style={{ fontSize: "0.75rem" }}>Admin</span>
                     )}
