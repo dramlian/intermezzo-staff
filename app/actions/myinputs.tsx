@@ -1,10 +1,17 @@
 "use server";
 
+import { auth } from "../lib/auth";
 import { getDb } from "../lib/mongo";
-import { Input, InputDbDto } from "../interfaces/Input"
+import { Input, InputDbDto } from "../interfaces/Input";
+
+async function requireAuth() {
+    const session = await auth();
+    if (!session) throw new Error("Unauthorized");
+}
 
 
 export async function getUserInputs(documentName: string): Promise<Input[]> {
+    await requireAuth();
     const db = await getDb();
 
     const day = await db
@@ -15,7 +22,7 @@ export async function getUserInputs(documentName: string): Promise<Input[]> {
 }
 
 export async function createDefaultInputsForUser(documentName: string): Promise<void> {
-
+    await requireAuth();
     const db = await getDb();
     if ((await getUserInputs(documentName)).length > 0) return;
 
@@ -31,6 +38,7 @@ export async function createDefaultInputsForUser(documentName: string): Promise<
 }
 
 export async function deleteInputForUser(documentName: string, day: string): Promise<void> {
+    await requireAuth();
     const db = await getDb();
 
     await db
@@ -42,6 +50,7 @@ export async function deleteInputForUser(documentName: string, day: string): Pro
 }
 
 export async function updateInputForUser(documentName: string, originalDay: string, input: Input): Promise<void> {
+    await requireAuth();
     const db = await getDb();
 
     await db
@@ -53,6 +62,7 @@ export async function updateInputForUser(documentName: string, originalDay: stri
 }
 
 export async function addInputForUser(documentName: string, input: Input): Promise<{ duplicate: boolean }> {
+    await requireAuth();
     const db = await getDb();
 
     await createDefaultInputsForUser(documentName);

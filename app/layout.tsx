@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Caveat } from "next/font/google";
-import Header from "../app/components/header/Header"
+import Header from "../app/components/header/Header";
+import SessionProvider from "../app/components/providers/SessionProvider";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./globals.css";
@@ -36,8 +37,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} antialiased`}
       >
-        <Header />
-        {children}
+        <SessionProvider>
+          <Header />
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

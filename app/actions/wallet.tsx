@@ -1,13 +1,20 @@
 "use server";
 
+import { auth } from "../lib/auth";
 import { getDb } from "../lib/mongo";
 import { Wallet, WalletDbDto } from "../interfaces/Wallet";
+
+async function requireAuth() {
+    const session = await auth();
+    if (!session) throw new Error("Unauthorized");
+}
 
 const DOCUMENT_ID = "wallet";
 const COLLECTION = "wallet_final";
 const HARDCODED_NAME = "Joe Doe";
 
 export async function getWallet(): Promise<Wallet | null> {
+    await requireAuth();
     const db = await getDb();
     const doc = await db.collection<WalletDbDto>(COLLECTION).findOne({ _id: DOCUMENT_ID });
     if (!doc || !doc.history?.length) return null;
@@ -15,6 +22,7 @@ export async function getWallet(): Promise<Wallet | null> {
 }
 
 export async function getWalletHistory(): Promise<Wallet[]> {
+    await requireAuth();
     const db = await getDb();
     const doc = await db.collection<WalletDbDto>(COLLECTION).findOne({ _id: DOCUMENT_ID });
     if (!doc || !doc.history?.length) return [];
@@ -22,6 +30,7 @@ export async function getWalletHistory(): Promise<Wallet[]> {
 }
 
 export async function setWallet(moneyCents: number): Promise<void> {
+    await requireAuth();
     const db = await getDb();
     const entry: Wallet = {
         name: HARDCODED_NAME,
