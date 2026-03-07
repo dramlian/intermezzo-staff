@@ -1,5 +1,5 @@
 'use client'
-import { Container, Table, Button, Row, Col } from "react-bootstrap"
+import { Container, Table, Button, Row, Col, Form } from "react-bootstrap"
 import MonthSelector from "../components/monthselector/MonthSelector"
 import ValueModal from "../components/valuemodal/ValueModal"
 import { useEffect, useState } from "react"
@@ -18,6 +18,7 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
     const [hoursView, setHoursView] = useState(false);
     const [inputs, setInputs] = useState<Input[]>([]);
     const [refreshTable, setRefreshTable] = useState(0);
+    const [selectedEmail, setSelectedEmail] = useState<string>("");
 
     useEffect(() => {
         const loadInputs = async () => {
@@ -27,6 +28,9 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
 
         if (isAdmin || email) loadInputs();
     }, [refreshTable, email, isAdmin]);
+
+    const ownerEmails = [...new Set(inputs.map(i => i.ownerEmail).filter((e): e is string => !!e))];
+    const visibleInputs = selectedEmail ? inputs.filter(i => i.ownerEmail === selectedEmail) : inputs;
 
     return <Container className='mt-3'>
         <Row className="mb-3">
@@ -38,6 +42,18 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
                 <Button variant={hoursView ? "outline-primary" : "outline-success"} className="w-50 ms-1" onClick={() => { setHoursView(!hoursView) }}>{hoursView ? "Zobraziť všetky dáta" : "Zobraziť len hodiny"}</Button>
             </Col>
         </Row>
+        {isAdmin && (
+            <Row className="mb-3">
+                <Col xs={12} md={4}>
+                    <Form.Select value={selectedEmail} onChange={e => setSelectedEmail(e.target.value)}>
+                        <option value="">Všetci zamestnanci</option>
+                        {ownerEmails.map(email => (
+                            <option key={email} value={email}>{email}</option>
+                        ))}
+                    </Form.Select>
+                </Col>
+            </Row>
+        )}
         <Table bordered hover variant="dark">
             <thead>
                 <tr>
@@ -56,8 +72,8 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
                 </tr>
             </thead>
             <tbody>
-                {inputs.map((input, i) => {
-                    const isEditable = i >= inputs.length - 2 || isAdmin
+                {visibleInputs.map((input, i) => {
+                    const isEditable = i >= visibleInputs.length - 2 || isAdmin
                     const money = (cents: number) => isEditable ? eur(cents) : "****"
                     return (
                         <tr key={i} onClick={isEditable ? () => { setShouldShow(true); setModalInEdit(true); setSelectedInput(input); } : undefined} style={isEditable ? { cursor: "pointer" } : { opacity: 0.35, pointerEvents: "none" }}>

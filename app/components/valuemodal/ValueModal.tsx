@@ -73,6 +73,7 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
         return {
             id: input?.id ?? "",
             owner: input?.owner,
+            ownerEmail: input?.ownerEmail,
             day,
             hours: parseFloat(hours),
             startMoneyCents: Math.round(parseFloat(startMoneyCents) * 100),

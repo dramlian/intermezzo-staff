@@ -79,7 +79,7 @@ export async function addInputForUser(documentName: string, input: Input): Promi
 
     await createDefaultInputsForUser(documentName);
 
-    const inputWithOwner: Input = { ...input, id: crypto.randomUUID(), owner: session.user!.name! };
+    const inputWithOwner: Input = { ...input, id: crypto.randomUUID(), owner: session.user!.name!, ownerEmail: session.user!.email! };
 
     const existing = await db
         .collection<InputDbDto>("inputs")

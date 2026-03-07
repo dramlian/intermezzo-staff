@@ -10,6 +10,7 @@ export interface Input {
     turnoverTerminalCents: number;
     dayExpensesCents: number;
     owner?: string;
+    ownerEmail?: string;
 }
 
 
