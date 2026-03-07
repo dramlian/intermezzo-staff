@@ -31,7 +31,7 @@ export async function getWalletHistory(): Promise<Wallet[]> {
 
 export async function setWallet(moneyCents: number): Promise<void> {
     const session = await requireAuth();
-    const name = session.user?.name ?? session.user?.email ?? "";
+    const name = session.user!.name!;
     const db = await getDb();
     const entry: Wallet = {
         name,

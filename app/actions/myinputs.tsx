@@ -7,6 +7,7 @@ import { Input, InputDbDto } from "../interfaces/Input";
 async function requireAuth() {
     const session = await auth();
     if (!session) throw new Error("Unauthorized");
+    return session;
 }
 
 
@@ -21,10 +22,21 @@ export async function getUserInputs(documentName: string): Promise<Input[]> {
     return day?.inputs ?? [];
 }
 
+export async function getAllInputs(): Promise<Input[]> {
+    await requireAuth();
+    const db = await getDb();
+
+    const docs = await db
+        .collection<InputDbDto>("inputs")
+        .find()
+        .toArray();
+
+    return docs.flatMap(doc => doc.inputs ?? []);
+}
+
 export async function createDefaultInputsForUser(documentName: string): Promise<void> {
     await requireAuth();
     const db = await getDb();
-    if ((await getUserInputs(documentName)).length > 0) return;
 
     if (await db
         .collection<InputDbDto>("inputs")
@@ -62,10 +74,12 @@ export async function updateInputForUser(documentName: string, originalDay: stri
 }
 
 export async function addInputForUser(documentName: string, input: Input): Promise<{ duplicate: boolean }> {
-    await requireAuth();
+    const session = await requireAuth();
     const db = await getDb();
 
     await createDefaultInputsForUser(documentName);
+
+    const inputWithOwner: Input = { ...input, owner: session.user!.name! };
 
     const existing = await db
         .collection<InputDbDto>("inputs")
@@ -77,7 +91,7 @@ export async function addInputForUser(documentName: string, input: Input): Promi
         .collection<InputDbDto>("inputs")
         .updateOne(
             { _id: documentName },
-            { $push: { inputs: input } }
+            { $push: { inputs: inputWithOwner } }
         );
 
     return { duplicate: false };

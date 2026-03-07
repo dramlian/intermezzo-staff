@@ -5,7 +5,7 @@ import ValueModal from "../components/valuemodal/ValueModal"
 import { useEffect, useState } from "react"
 import { useCurrentUser } from "../lib/useCurrentUser"
 import { Input } from "../interfaces/Input"
-import { getUserInputs } from "../actions/myinputs"
+import { getUserInputs, getAllInputs } from "../actions/myinputs"
 
 const eur = (cents: number) => `${(cents / 100).toFixed(2)} €`
 
@@ -20,14 +20,13 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
     const [refreshTable, setRefreshTable] = useState(0);
 
     useEffect(() => {
-        if (!email) return;
         const loadInputs = async () => {
-            const data = await getUserInputs(email);
+            const data = isAdmin ? await getAllInputs() : await getUserInputs(email);
             setInputs(data);
         };
 
-        loadInputs();
-    }, [refreshTable, email]);
+        if (isAdmin || email) loadInputs();
+    }, [refreshTable, email, isAdmin]);
 
     return <Container className='mt-3'>
         <Row className="mb-3">
@@ -42,6 +41,7 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
         <Table bordered hover variant="dark">
             <thead>
                 <tr>
+                    {isAdmin && <th>Zamestnanec</th>}
                     <th>Dátum/Deň</th>
                     <th>Hodiny</th>
                     {!hoursView && <>
@@ -61,6 +61,7 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
                     const money = (cents: number) => isEditable ? eur(cents) : "****"
                     return (
                         <tr key={i} onClick={isEditable ? () => { setShouldShow(true); setModalInEdit(true); setSelectedInput(input); } : undefined} style={isEditable ? { cursor: "pointer" } : { opacity: 0.35, pointerEvents: "none" }}>
+                            {isAdmin && <td>{input.owner}</td>}
                             <td>{input.day}</td>
                             <td>{input.hours}</td>
                             {!hoursView && <>
