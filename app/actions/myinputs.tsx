@@ -49,26 +49,26 @@ export async function createDefaultInputsForUser(documentName: string): Promise<
         .insertOne({ _id: documentName, inputs: [] });
 }
 
-export async function deleteInputForUser(documentName: string, day: string): Promise<void> {
+export async function deleteInputForUser(id: string): Promise<void> {
     await requireAuth();
     const db = await getDb();
 
     await db
         .collection<InputDbDto>("inputs")
         .updateOne(
-            { _id: documentName },
-            { $pull: { inputs: { day: day } } }
+            { "inputs.id": id },
+            { $pull: { inputs: { id } } }
         );
 }
 
-export async function updateInputForUser(documentName: string, originalDay: string, input: Input): Promise<void> {
+export async function updateInputForUser(id: string, input: Input): Promise<void> {
     await requireAuth();
     const db = await getDb();
 
     await db
         .collection<InputDbDto>("inputs")
         .updateOne(
-            { _id: documentName, "inputs.day": originalDay },
+            { "inputs.id": id },
             { $set: { "inputs.$": input } }
         );
 }
@@ -79,7 +79,7 @@ export async function addInputForUser(documentName: string, input: Input): Promi
 
     await createDefaultInputsForUser(documentName);
 
-    const inputWithOwner: Input = { ...input, owner: session.user!.name! };
+    const inputWithOwner: Input = { ...input, id: crypto.randomUUID(), owner: session.user!.name! };
 
     const existing = await db
         .collection<InputDbDto>("inputs")

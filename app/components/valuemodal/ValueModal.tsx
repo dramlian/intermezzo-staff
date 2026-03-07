@@ -71,6 +71,8 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
 
     function buildInput(): Input {
         return {
+            id: input?.id ?? "",
+            owner: input?.owner,
             day,
             hours: parseFloat(hours),
             startMoneyCents: Math.round(parseFloat(startMoneyCents) * 100),
@@ -101,7 +103,7 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
         if (!input) return
         const error = validate()
         if (error) { showToast(error, "warning"); return }
-        await updateInputForUser(email, input.day, buildInput())
+        await updateInputForUser(input.id, buildInput())
         setShouldShow(false)
         onSuccess()
         showToast("Hodnota bola úspešne upravená.", "success")
@@ -109,7 +111,7 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
 
     async function handleDelete() {
         if (!input) return
-        await deleteInputForUser(email, input.day)
+        await deleteInputForUser(input.id)
         setShouldShow(false)
         onSuccess()
         showToast("Hodnota bola vymazaná.", "success")

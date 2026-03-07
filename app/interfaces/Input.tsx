@@ -1,4 +1,5 @@
 export interface Input {
+    id: string;
     day: string;
     hours: number;
     startMoneyCents: number;
