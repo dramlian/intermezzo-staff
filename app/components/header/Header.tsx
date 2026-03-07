@@ -9,7 +9,7 @@ import styles from "./Header.module.css";
 import { useSession, signOut } from "next-auth/react";
 
 
-export default function Header() {
+export default function Header({ isAdmin }: { isAdmin: boolean }) {
     const { data: session } = useSession();
 
     return <Navbar data-bs-theme="dark" className={styles.navbarGradient}>
@@ -24,6 +24,9 @@ export default function Header() {
                     <span className="text-light" style={{ fontSize: "0.9rem" }}>
                         {session.user.name ?? session.user.email}
                     </span>
+                    {isAdmin && (
+                        <span className="badge bg-primary text-dark" style={{ fontSize: "0.75rem" }}>Admin</span>
+                    )}
                     <Button variant="outline-light" size="sm" onClick={() => signOut()}>
                         Odhlásiť
                     </Button>
