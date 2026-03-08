@@ -16,7 +16,7 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
     const [shouldShow, setShouldShow] = useState(false);
     const [modalInEdit, setModalInEdit] = useState(false);
     const [selectedInput, setSelectedInput] = useState<Input | undefined>(undefined);
-    const [hoursView, setHoursView] = useState(false);
+    const [hoursView, setHoursView] = useState(!isAdmin);
     const [inputs, setInputs] = useState<Input[]>([]);
     const [refreshTable, setRefreshTable] = useState(0);
     const [selectedEmail, setSelectedEmail] = useState<string>("");
