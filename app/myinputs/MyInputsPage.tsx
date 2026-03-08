@@ -32,6 +32,9 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
     const ownerEmails = [...new Set(inputs.map(i => i.ownerEmail).filter((e): e is string => !!e))];
     const visibleInputs = selectedEmail ? inputs.filter(i => i.ownerEmail === selectedEmail) : inputs;
 
+    const sum = (key: keyof Pick<Input, "hours" | "startMoneyCents" | "turnoverCents" | "turnoverTerminalCents" | "dayExpensesCents" | "endMoneyCents">) =>
+        visibleInputs.reduce((acc, i) => acc + (i[key] as number), 0);
+
     return <Container className='mt-3'>
         <Row className="mb-3">
             <Col xs={6}>
@@ -93,6 +96,22 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
                     )
                 })}
             </tbody>
+            <tfoot>
+                <tr className="table-secondary fw-bold">
+                    {isAdmin && <td>Spolu</td>}
+                    <td>{!isAdmin && "Spolu"}</td>
+                    <td>{sum("hours").toFixed(2)}</td>
+                    {!hoursView && <>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{eur(sum("turnoverCents"))}</td>
+                        <td>{eur(sum("turnoverTerminalCents"))}</td>
+                        <td></td>
+                        <td></td>
+                    </>}
+                </tr>
+            </tfoot>
         </Table>
         <ValueModal shouldShow={shouldShow} setShouldShow={setShouldShow} isNew={!modalInEdit} input={selectedInput} onSuccess={() => setRefreshTable(n => n + 1)} />
     </Container>
