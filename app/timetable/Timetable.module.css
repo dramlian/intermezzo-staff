@@ -1,0 +1,87 @@
+.calendar :global(.fc) {
+    color: #dee2e6;
+}
+
+.calendar :global(.fc-theme-standard td),
+.calendar :global(.fc-theme-standard th),
+.calendar :global(.fc-theme-standard .fc-scrollgrid) {
+    border-color: #2e2e2e;
+}
+
+.calendar :global(.fc-col-header-cell) {
+    background-color: #161616;
+    color: #aaa;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.calendar :global(.fc-timegrid-slot),
+.calendar :global(.fc-timegrid-slot-lane) {
+    background-color: #0d0d0d;
+    border-color: #1e1e1e;
+}
+
+.calendar :global(.fc-timegrid-slot-label) {
+    color: #555;
+    font-size: 0.75rem;
+}
+
+.calendar :global(.fc-daygrid-day),
+.calendar :global(.fc-timegrid-col) {
+    background-color: #0d0d0d;
+}
+
+.calendar :global(.fc-day-today) {
+    background-color: #141414 !important;
+}
+
+.calendar :global(.fc-day-today .fc-col-header-cell-cushion) {
+    color: #f0f0f0;
+}
+
+.calendar :global(.fc-now-indicator-line) {
+    border-color: #888;
+}
+
+.calendar :global(.fc-button) {
+    background-color: #1a1a1a !important;
+    border-color: #2e2e2e !important;
+    color: #aaa !important;
+    font-size: 0.8rem !important;
+}
+
+.calendar :global(.fc-button:hover) {
+    background-color: #252525 !important;
+    color: #f0f0f0 !important;
+}
+
+.calendar :global(.fc-button-active),
+.calendar :global(.fc-button-primary:not(:disabled).fc-button-active) {
+    background-color: #2e2e2e !important;
+    border-color: #555 !important;
+    color: #f0f0f0 !important;
+}
+
+.calendar :global(.fc-toolbar-title) {
+    font-size: 1rem !important;
+    color: #ccc;
+    font-weight: 400;
+}
+
+.calendar :global(.fc-event) {
+    border: none !important;
+    font-size: 0.78rem;
+    padding: 2px 4px;
+    opacity: 0.9;
+}
+
+.calendar :global(.fc-event-title) {
+    font-weight: 500;
+}
+
+.calendar :global(.fc-scrollgrid-liquid) {
+    border-radius: 6px;
+    overflow: hidden;
+}

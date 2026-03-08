@@ -19,6 +19,7 @@ export default function Header({ isAdmin }: { isAdmin: boolean }) {
             <Nav className="me-auto">
                 <Nav.Link as={Link} href="/wallet">Peňaženka</Nav.Link>
                 <Nav.Link as={Link} href="/myinputs">Moje vklady</Nav.Link>
+                <Nav.Link as={Link} href="/timetable">Smeny</Nav.Link>
             </Nav>
             {email && (
                 <div className="d-flex align-items-center gap-2">
