@@ -27,7 +27,7 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
         const loadInputs = async () => {
             setLoading(true);
             const data = isAdmin ? await getAllInputs(selectedMonth) : await getUserInputs(email, selectedMonth);
-            setInputs(data);
+            setInputs([...data].sort((a, b) => a.day.localeCompare(b.day)));
             setLoading(false);
         };
 
