@@ -30,6 +30,9 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
         if (isAdmin || email) loadInputs();
     }, [refreshTable, email, isAdmin, selectedMonth]);
 
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    const isCurrentMonth = selectedMonth === currentMonth;
+
     const ownerEmails = [...new Set(inputs.map(i => i.ownerEmail).filter((e): e is string => !!e))];
     const visibleInputs = selectedEmail ? inputs.filter(i => i.ownerEmail === selectedEmail) : inputs;
 
@@ -77,7 +80,7 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
             </thead>
             <tbody>
                 {visibleInputs.map((input, i) => {
-                    const isEditable = i >= visibleInputs.length - 2 || isAdmin
+                    const isEditable = isAdmin || (isCurrentMonth && i >= visibleInputs.length - 2)
                     const money = (cents: number) => isEditable ? eur(cents) : "****"
                     return (
                         <tr key={i} onClick={isEditable ? () => { setShouldShow(true); setModalInEdit(true); setSelectedInput(input); } : undefined} style={isEditable ? { cursor: "pointer" } : { opacity: 0.35, pointerEvents: "none" }}>
