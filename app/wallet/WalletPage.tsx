@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { ClipLoader } from "react-spinners"
 import { Button, Form, InputGroup, Container, Row, Accordion } from "react-bootstrap"
 import { format } from "date-fns"
 import { getWallet, getWalletHistory, setWallet } from "../actions/wallet"
@@ -12,11 +13,14 @@ export default function WalletPage({ isAdmin }: { isAdmin: boolean }) {
     const [current, setCurrent] = useState<Wallet | null>(null)
     const [history, setHistory] = useState<Wallet[]>([])
     const [amount, setAmount] = useState("")
+    const [loading, setLoading] = useState(false)
 
     async function load() {
+        setLoading(true)
         const [data, hist] = await Promise.all([getWallet(), getWalletHistory()])
         setCurrent(data)
         setHistory(hist)
+        setLoading(false)
     }
 
     useEffect(() => { load() }, [])
@@ -28,6 +32,12 @@ export default function WalletPage({ isAdmin }: { isAdmin: boolean }) {
         setAmount("")
         await load()
     }
+
+    if (loading) return (
+        <div className="d-flex justify-content-center mt-5">
+            <ClipLoader color="#f0f0f0" size={50} />
+        </div>
+    )
 
     return (
         <Container>

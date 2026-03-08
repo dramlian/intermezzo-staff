@@ -3,6 +3,7 @@ import { Container, Table, Button, Row, Col, Form } from "react-bootstrap"
 import MonthSelector from "../components/monthselector/MonthSelector"
 import ValueModal from "../components/valuemodal/ValueModal"
 import { useEffect, useState } from "react"
+import { ClipLoader } from "react-spinners"
 import { useCurrentUser } from "../lib/useCurrentUser"
 import { Input } from "../interfaces/Input"
 import { getUserInputs, getAllInputs } from "../actions/myinputs"
@@ -20,11 +21,14 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
     const [refreshTable, setRefreshTable] = useState(0);
     const [selectedEmail, setSelectedEmail] = useState<string>("");
     const [selectedMonth, setSelectedMonth] = useState<string>(new Date().toISOString().slice(0, 7));
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const loadInputs = async () => {
+            setLoading(true);
             const data = isAdmin ? await getAllInputs(selectedMonth) : await getUserInputs(email, selectedMonth);
             setInputs(data);
+            setLoading(false);
         };
 
         if (isAdmin || email) loadInputs();
@@ -61,7 +65,12 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
                 </Col>
             </Row>
         )}
-        <Table bordered hover variant="dark">
+        {loading && (
+            <div className="d-flex justify-content-center my-5">
+                <ClipLoader color="#f0f0f0" size={50} />
+            </div>
+        )}
+        {!loading && <Table bordered hover variant="dark">
             <thead>
                 <tr>
                     {isAdmin && <th>Zamestnanec</th>}
@@ -116,7 +125,7 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
                     </>}
                 </tr>
             </tfoot>
-        </Table>
+        </Table>}
         <ValueModal shouldShow={shouldShow} setShouldShow={setShouldShow} isNew={!modalInEdit} input={selectedInput} month={selectedMonth} onSuccess={() => setRefreshTable(n => n + 1)} />
     </Container>
 }
