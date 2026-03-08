@@ -24,7 +24,7 @@ export default function Header({ isAdmin }: { isAdmin: boolean }) {
                 <div className="d-flex align-items-center gap-2">
                     <span className="text-light" style={{ fontSize: "0.9rem" }}>{name}</span>
                     {isAdmin && (
-                        <span className="badge bg-primary text-dark" style={{ fontSize: "0.75rem" }}>Admin</span>
+                        <span className="badge" style={{ fontSize: "0.75rem", background: "#444", color: "#f0f0f0" }}>Admin</span>
                     )}
                     <Button variant="outline-light" size="sm" onClick={() => signOut()}>
                         Odhlásiť
