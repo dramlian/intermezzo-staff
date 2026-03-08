@@ -19,15 +19,16 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
     const [inputs, setInputs] = useState<Input[]>([]);
     const [refreshTable, setRefreshTable] = useState(0);
     const [selectedEmail, setSelectedEmail] = useState<string>("");
+    const [selectedMonth, setSelectedMonth] = useState<string>(new Date().toISOString().slice(0, 7));
 
     useEffect(() => {
         const loadInputs = async () => {
-            const data = isAdmin ? await getAllInputs() : await getUserInputs(email);
+            const data = isAdmin ? await getAllInputs(selectedMonth) : await getUserInputs(email, selectedMonth);
             setInputs(data);
         };
 
         if (isAdmin || email) loadInputs();
-    }, [refreshTable, email, isAdmin]);
+    }, [refreshTable, email, isAdmin, selectedMonth]);
 
     const ownerEmails = [...new Set(inputs.map(i => i.ownerEmail).filter((e): e is string => !!e))];
     const visibleInputs = selectedEmail ? inputs.filter(i => i.ownerEmail === selectedEmail) : inputs;
@@ -38,7 +39,7 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
     return <Container className='mt-3'>
         <Row className="mb-3">
             <Col xs={6}>
-                <MonthSelector selectedMonth={"2026-03"} onMonthChange={() => { }} />
+                <MonthSelector selectedMonth={selectedMonth} onMonthChange={setSelectedMonth} />
             </Col>
             <Col xs={6} className="d-flex align-items-center">
                 <Button variant="outline-secondary" className="w-50 ms-1" onClick={() => { setShouldShow(true); setModalInEdit(false) }}>Vložiť hodnotu</Button>
@@ -113,6 +114,6 @@ export default function MyInputsPage({ isAdmin }: { isAdmin: boolean }) {
                 </tr>
             </tfoot>
         </Table>
-        <ValueModal shouldShow={shouldShow} setShouldShow={setShouldShow} isNew={!modalInEdit} input={selectedInput} onSuccess={() => setRefreshTable(n => n + 1)} />
+        <ValueModal shouldShow={shouldShow} setShouldShow={setShouldShow} isNew={!modalInEdit} input={selectedInput} month={selectedMonth} onSuccess={() => setRefreshTable(n => n + 1)} />
     </Container>
 }

@@ -9,7 +9,7 @@ const LABEL_WIDTH = 140
 const centsToStr = (cents: number) => (cents / 100).toFixed(2)
 const today = () => new Date().toISOString().split("T")[0]
 
-export default function ValueModal({ shouldShow, setShouldShow, isNew, input, onSuccess }: { shouldShow: boolean, setShouldShow: Dispatch<SetStateAction<boolean>>, isNew: boolean, input?: Input, onSuccess: () => void }) {
+export default function ValueModal({ shouldShow, setShouldShow, isNew, input, month, onSuccess }: { shouldShow: boolean, setShouldShow: Dispatch<SetStateAction<boolean>>, isNew: boolean, input?: Input, month: string, onSuccess: () => void }) {
     const { email } = useCurrentUser();
     const [day, setDay] = useState("")
     const [hours, setHours] = useState("")
@@ -93,7 +93,7 @@ export default function ValueModal({ shouldShow, setShouldShow, isNew, input, on
     async function handleInsert() {
         const error = validate()
         if (error) { showToast(error, "warning"); return }
-        const { duplicate } = await addInputForUser(email, buildInput())
+        const { duplicate } = await addInputForUser(email, month, buildInput())
         if (duplicate) { showToast("Záznam pre tento dátum už existuje.", "warning"); return }
         setShouldShow(false)
         onSuccess()
